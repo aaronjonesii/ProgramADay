@@ -3,6 +3,7 @@ Function:       Watch log file to see when a new line have been added
 Date:           02.06.2019
 Created By:     Anonymous Systems
 '''
+import sys
 import os
 import time
 from datetime import datetime
@@ -21,6 +22,10 @@ def watchFile(filename):
 
 
 if __name__ == '__main__':
-    filename = os.path.join('/Users/anonymousone/Documents/MEGA/Development/Python/New/LogWatcher', 'test.log')
+    if len(sys.argv) != 2:
+        print('Usage: python3 logwatcher.py <LOG FILENAME PATH HERE>')
+        sys.exit(1)
+    filename = sys.argv[1]
+    # filename = os.path.join('/Users/anonymousone/Documents/MEGA/Development/Python/New/LogWatcher', 'test.log')
     print(f'Currently watching [ {filename} ]\n')
     watchFile(filename)

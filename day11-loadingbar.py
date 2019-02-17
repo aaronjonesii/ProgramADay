@@ -1,5 +1,5 @@
 '''
-Function:       Loading Bar for Command Line
+Function:       Loading Bar for CLI
 Date:           02.17.2019
 Created By:     Anonymous Systems
 Dependencies:   tqdm

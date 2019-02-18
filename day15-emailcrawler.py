@@ -1,6 +1,6 @@
 '''
 Function:       Crawl website for emails
-Date:           02.09.2019
+Date:           02.18.2019
 Created By:     Anonymous Systems
 Dependencies:   requests, bs4
 '''
@@ -10,15 +10,21 @@ import re
 
 
 def getEmails(file, url):
-    email_pattern = r'[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*'
-    page = get(url)
-    if page.status_code == 200:
-        soup = BeautifulSoup(page.content, 'html.parser')
-        emails = soup(text=re.compile(email_pattern))
-        if len(emails):
-            file.write(f'[ √ ] Found {len(emails)} on {url} => {emails} \n')
-        else: file.write(f'Found 0 emails for {url} => {emails} \n')
-    else: print(f'Something went wrong => {page.url}/{page.status_code} - {page.content}')
+    # email_pattern = r'[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*'
+    email_pattern = r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,10}$"
+    try:
+        page = get(url)
+        if page.status_code == 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            emails = soup(text=re.compile(email_pattern))
+            if len(emails):
+                file.write(f'[ ! ] Found {len(emails)} email(s) on {url} => {emails} \n')
+                return emails
+            else:
+                file.write(f'Found 0 emails for {url} => {emails} \n')
+                return None
+        else: print(f'Something went wrong => {page.url}/{page.status_code} - {page.content}')
+    except: print(f'Something went wrong => {url}')
 
 
 def getLinks(url):
@@ -43,8 +49,19 @@ if __name__ == '__main__':
     urls = getLinks(domain)
     print(f'[!] Found {len(urls)} urls from {domain}')
     file = open(filename + '.txt', 'w')
-    for url in urls:
-        getEmails(file, url)
-    #     print(link)
+    all_emails_found = set()
 
-    print(f'Finished writing emails to {file.name}')
+    for url in urls:
+        urlemails = getEmails(file, url)
+
+        if urlemails == None: pass
+        elif len(urlemails):
+            for email in urlemails:
+                all_emails_found.add(email)
+    if len(all_emails_found):
+        output = f'Found a total of {len(all_emails_found)} email(s) => {all_emails_found}'
+        print(output)
+        file.write(output)
+        print(f'Finished writing emails to {file.name}')
+    else: print('No emails were found!')
+

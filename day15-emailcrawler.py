@@ -21,7 +21,7 @@ def getEmails(file, url):
                 file.write(f'[ ! ] Found {len(emails)} email(s) on {url} => {emails} \n')
                 return emails
             else:
-                file.write(f'Found 0 emails for {url} => {emails} \n')
+                file.write(f'\tFound 0 emails for {url} => {emails} \n')
                 return None
         else: print(f'Something went wrong => {page.url}/{page.status_code} - {page.content}')
     except: print(f'Something went wrong => {url}')
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             for email in urlemails:
                 all_emails_found.add(email)
     if len(all_emails_found):
-        output = f'Found a total of {len(all_emails_found)} email(s) => {all_emails_found}'
+        output = f'[ * ] Found a total of {len(all_emails_found)} email(s) => {all_emails_found}'
         print(output)
         file.write(output)
         print(f'Finished writing emails to {file.name}')
